@@ -1,0 +1,115 @@
+/*
+  header */
+
+header{
+  background-color: #e0f4ff;
+}
+
+header{
+  padding: 1.2vmin;
+
+  height: 12.5vh;
+
+  text-align: center;
+}
+
+/*
+  main */
+
+#home{
+  background-color: #e0f4ff;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+#home{
+  height: 72.5vh;
+}
+
+.home-title{
+  color: #39a7ff;
+  font-size: xxx-large;
+  font-weight: bold;
+}
+
+#nav_btn_group{
+  margin: 2.5vh 0;
+}
+
+#home .my-nav-btn{
+  padding: 1rem 1.5rem;
+
+  font-size: large;
+  font-weight: bold;
+}
+
+.custom-tooltip{
+  --bs-tooltip-bg: #39a7ff;
+  --bs-tooltip-color: white;
+}
+
+article{
+  background-color: #87c4ff;
+}
+
+article{
+  padding: 7rem;
+}
+
+.information-title{
+  color: #39a7ff;
+  font-size: x-large;
+  font-weight: 800;
+
+  text-align: center;
+}
+
+#information blockquote{
+  margin: 7rem;
+
+  line-height: 1.55;
+  text-align: center;
+}
+
+#information blockquote, #information p{
+  font-size: large;
+}
+
+#information .cite{
+  margin: 10vh 9.9vw;
+}
+
+#information .cite cite>a:link, #information .cite cite>a:visited{
+  color: #87c4ff;
+}
+
+#information .cite cite>a:hover{
+  color: #39a7ff;
+}
+
+#information>img{
+  display: block;
+
+  margin: 15vh auto;
+}
+
+#information p{
+  margin: 3rem;
+}
+
+#information p+.cite{
+  text-align: end;
+}
+
+.cite>a{
+  color: black;
+}
+
+/*
+  footer */
+
+footer{
+  background-color: #ffeed9;
+}

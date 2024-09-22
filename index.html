@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>냉장고 비우기 프로젝트</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <link href="style.css" rel="stylesheet">
+
+  <style>
+    *{
+      box-sizing: border-box;
+
+      margin: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <img src="images/ic_fridge.png" width="110" alt="This is the fridge icon logo.">
+  </header>
+  <main>
+    <section id="home">
+      <h1 class="home-title">냉장고 비우기</h1>
+      <h1 class="home-title">프로젝트</h1>
+      <div id="nav_btn_group" class="btn-group">
+        <a href="#" class="my-nav-btn btn btn-primary" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-placement="left" data-bs-title="심심하면 여기로" aria-current="page">놀러 갔다 오기</a>
+        <a href="choose/choose.html" class="my-nav-btn btn btn-primary" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-placement="right" data-bs-title="ㄱㄱ" aria-current="page">지금 비우러 가기</a>
+      </div>
+    </section>
+    <article id="information">
+      <h2 class="information-title">소모되지 않은 식품</h2>
+      <section id="information_blockquote">
+        <blockquote cite="https://www.newspenguin.com/news/articleView.html?idxno=5183">
+          식량을 생산하는 데는 엄청난 양의 토지와 물, 에너지가 사용되므로 이처럼 버려지는 음식물은 기후위기에 큰 영향을 미친다.<br>
+          <br>
+          음식물 쓰레기로 인한 온실가스는 전 세계 배출량의 약 10%에 달한다. 이는 미국과 유럽에서 1년 동안 발생하는 자동차 온실가스보다 <strong>2배</strong>가량 높다.<br>
+          <br>
+          또한 먹지도 못하고 <strong>버려지는 식량</strong>을 생산하기 위해, 인도 아대륙 면적보다 큰 440만km²에 달하는 농경지와 올림픽 수영 경기장 3억 400만 개를 채울 만큼 물이 사용된다.
+        </blockquote>
+        <p class="cite">
+          출처: <cite>뉴스펭귄<a href="https://www.newspenguin.com/news/articleView.html?idxno=5183" title="먹기도 전에 버려지는 식량 쓰레기만 매년 12억 톤">(https://www.newspenguin.com/news/articleView.html?idxno=5183)</a></cite>
+        </p>
+      </section>
+      <img src="images/unspent_foods.jpg" class="img-thumbnail" width="50%" alt="This is an image of unspent foods.">
+      <section id="information_article">
+        <p>
+          &nbsp;&nbsp;2021년 11월 6일, 영국 글래스고에서 열린 제26차 유엔 기후변화협약 당사국총회(COP26)에 덴마크의 청년 맷 홈우드가 연사로 초청되었다. 환경운동가이자 인플루언서(@anurbanharvester)인 맷 홈우드는 매일 저녁 7시 마트의 쓰레기통을 뒤진다. 벌써 3년째다. 오늘 구운 신선한 빵, 유통기한이 한참 남은 햄, 하나가 깨져 한 판 그대로 버려진 달걀 등 <strong>그가 ‘수확’한 음식들은 쓰레기통이 아닌 진열대가 더 어울릴 만큼 멀쩡한 모습</strong>이다. 바구니를 가득 채우고도 넘치는 식재료는 맷(혹은 친구들까지)을 위한 근사한 저녁식사로 변신한다. “시스템의 광기예요. 트럭은 매일 새로운 식품을 싣고 마트에 옵니다. 진열대가 부족하면 유통기한이 남은 식품도 다 버리는 거죠.” 비단 슈퍼마켓만의 문제일까? 농업 과잉 생산, 저장과 유통 과정에서 망가진 식재료, 규격을 통과하지 못한 못난이 채소와 과일, 샌드위치 제조 공장에서 나온 자투리 토마토나 빵, 가정에서 먹다 남은 음식들까지. 음식은 생각보다 다양한 이유에서 가치를 잃는다.
+        </p>
+        <p>
+          &nbsp;&nbsp;풍요의 시대, 그러나 지구 반대편에서는 믿기 힘든 일들이 벌어지고 있다. 전 세계 인구의 11%, 대략 8억 명이 극심한 굶주림에 고통받고 있다. 독일의 영화제작자 발렌틴 투른은 자신이 쓴 책 &lt;왜 음식물의 절반이 버려지는데 누군가는 굶어 죽는가&gt;와 그 뒷이야기를 다룬 다큐멘터리 &lt;쓰레기를 맛보자&gt;를 통해 처참한 현실을 고발했다. 유럽에서 버려지는 음식의 양은 전 세계 기아들이 두 번 먹고도 남는 양이라는 거다. <strong>이 얼마나 끔찍한 식량 불평등인가?</strong>
+        </p>
+        <p>
+          &nbsp;&nbsp;더 큰 문제는 음식물 쓰레기가 우리 모두에게 해롭다는 것이다. 처리 과정에서 온실가스 8%가 발생되고, 담수(강, 호수, 지하수) 21%가 사용된다. 또 매립지로 간 음식은 땅속에서 단단히 압축되어 산소를 공급받지 못한 채 메탄 가스를 생성한다.(이 가스는 이산화탄소보다 25배 해롭다.) 서서히 지구의 숨통을 조여오는 기후위기에 음식물 쓰레기도 큰 일조를 한다는 얘기다. 세계 곳곳에서 포착된 이상징후는 지구가 인류에게 보낸 일종의 경고 메시지. 그리고 케냐는 몇 년째 그 지옥 같은 소용돌이에 빠져 있다. 건기와 우기가 뚜렷했던 케냐 북부 지역엔 3년째 비 소식이 없다. 기록적인 가뭄이 지속되면서 동물들이 죽어나갔고, 목축을 하며 자급자족하던 땅은 희망 없는 불모지로 변했다. 그런가 하면 케냐의 호숫가 마을 나이비샤는 정반대의 위기에 처했다. 화훼농장이 끝없이 펼쳐졌던 이곳은 10년째 계속된 폭우로 도시 전체가 물바다가 되었다. 호수는 집을 삼켰고, 그 불확실한 경계 속에 사람과 하마가 위험한 동거 중이다. <strong>결과적으로 기후위기는 식량 부족을 야기한다.</strong> 아이러니한 건 탄소 배출을 거의 하지 않은 나라가 지구 온도 상승의 대가를 치르고 있다는 점이다.
+        </p>
+        <p>
+          &nbsp;&nbsp;위기를 직감한 전 세계는 음식물 쓰레기와의 전쟁을 선포했다. 2013년, 프랑스 농림부 장관은 2025년까지 음식물 쓰레기를 절반으로 줄이겠다는 국민 협정에 서명했다. 또 프랑스 의회는 슈퍼마켓의 재고 식품 폐기를 금지하고, 이를 자선 단체와 푸드뱅크에 기부하는 법안을 통과시켰다. 일본은 2019년부터 ‘식품손실감소 추진법’을 시행했다. 정부와 지자체, 기업, 소비자가 협력해 음식 쓰레기를 최대한 줄인다는 취지다.
+        </p>
+        <p class="cite">
+          류지현, <a href="https://www.harpersbazaar.co.kr/article/65670" title="하퍼스 바자 코리아"><cite>버려지는 음식들</cite></a>
+        </p>
+      </section>
+    </article>
+  </main>
+  <footer></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script>const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));</script>
+</body>
+</html>

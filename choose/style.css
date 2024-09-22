@@ -1,0 +1,125 @@
+@media screen and (max-width:739px){
+  body{
+    background-color: #e0f4ff;
+  }
+}
+
+@media screen and (min-width:740px){
+  body{
+    background: linear-gradient(110deg, #e0f4ff 50%, #39a7ff 50%);
+  }
+}
+
+/*
+  header */
+
+header{
+  height: 12.5vh;
+}
+
+/*
+  main */
+
+@media screen and (max-width:739px){
+  main{
+    display: flex;
+    flex-flow: row wrap;
+  }
+
+  main{
+    height: 87.5vh;
+  }
+}
+
+@media screen and (min-width:740px){
+  main{
+    display: flex;
+    flex-flow: row nowrap;
+  }
+
+  main{
+    padding: 0 5vw;
+
+    height: 87.5vh;
+  }
+}
+
+section#main_ingredient{
+  align-items: flex-start;
+
+  padding-right: 13vmax;
+}
+
+#main_ingredient{
+  color: black;
+}
+
+@media screen and (max-width:739px){
+  #main_ingredient, #secondary_ingredient{
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+
+    padding: 0 5vw;
+
+    width: 100%;
+  }
+}
+
+@media screen and (min-width:740px){
+  #main_ingredient, #secondary_ingredient{
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+
+    width: 100%;
+  }
+}
+
+.choose-title{
+  font-weight: bold;
+}
+
+.choose-control{
+  display: flex;
+  align-items: baseline;
+}
+
+.choose-control{
+  margin-top: 22px;
+}
+
+input.word{
+  width: 170px;
+
+  text-align: center;
+}
+
+.choose-control input[type="text"]::placeholder{
+  color: lightgray;
+}
+
+main .my-nav-btn{
+  margin-left: 0.7vw;
+}
+
+@media screen and (max-width:739px){
+  #secondary_ingredient{
+    background-color: #39a7ff;
+    align-items: flex-end;
+
+    padding-left: 13vmax;
+  }
+}
+
+@media screen and (min-width:740px){
+  #secondary_ingredient{
+    align-items: flex-end;
+
+    padding-left: 13vmax;
+  }
+}
+
+#secondary_ingredient{
+  color: white;
+}
