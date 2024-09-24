@@ -50,11 +50,11 @@ header{
   --bs-tooltip-color: white;
 }
 
-article{
+#information{
   background-color: #87c4ff;
 }
 
-article{
+#information{
   padding: 7rem;
 }
 
