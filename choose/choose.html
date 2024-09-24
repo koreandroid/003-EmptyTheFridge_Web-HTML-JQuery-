@@ -55,7 +55,24 @@
         <div class="modal-body"></div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">이전으로</button>
-          <button type="button" id="main_pick_modal_next" class="btn btn-primary">다음</button>
+          <button type="button" id="main_pick_modal_next" class="btn btn-primary" data-bs-target="#recipe_decide_with_main_modal" data-bs-toggle="modal" disabled>다음</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 레시피 결정 모달 -->
+  <div id="recipe_decide_with_main_modal" class="modal fade" tabindex="-1" aria-labelledby="decide_with_main_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 id="decide_with_main_modal_label" class="modal-title fs-4">주재료로 <label class="btn btn-outline-primary btn-lg"></label>을(를) 고르셨습니다.</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body"></div>
+        <div class="modal-footer">
+          <a class="btn btn-secondary disabled" role="button" aria-disabled="true">홈 화면으로</a>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">주재료/부재료 다시 선택하기</button>
         </div>
       </div>
     </div>

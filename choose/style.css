@@ -134,3 +134,10 @@ main .my-nav-btn{
 #main_ingredient_pick_modal .modal-body label{
   margin: 1.8% 0.4%;
 }
+
+/*
+  #recipe_decide_with_main_modal */
+
+#recipe_decide_with_main_modal .modal-header{
+  padding-top: 1.3em;
+}
