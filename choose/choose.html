@@ -28,8 +28,8 @@
         주재료를 한 가지 선택한 후, 다음 단계에서 나머지 재료들을 고를 수 있습니다.
       </p>
       <div class="choose-control">
-        <input type="text" class="form-control form-control-lg word" placeholder="재료 이름" />
-        <button type="button" class="my-nav-btn btn btn-primary btn-lg">다음</button>
+        <input type="text" id="main_ingredient_input" class="form-control form-control-lg word" placeholder="재료 이름" />
+        <button type="button" class="my-nav-btn btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#main_ingredient_pick_modal">다음</button>
       </div>
     </section>
     <section id="secondary_ingredient">
@@ -38,11 +38,30 @@
         부재료를 한 가지 선택한 후, 다음 단계에서 나머지 재료들을 고를 수 있습니다.
       </p>
       <div class="choose-control">
-        <input type="text" class="form-control form-control-lg word" placeholder="재료 이름" />
+        <input type="text" id="secondary_ingredient_input" class="form-control form-control-lg word" placeholder="재료 이름" />
         <button type="button" class="my-nav-btn btn btn-primary btn-lg">다음</button>
       </div>
     </section>
   </main>
+
+  <!-- 주재료 선택 모달 -->
+  <div id="main_ingredient_pick_modal" class="modal" tabindex="-1" aria-labelledby="main_pick_modal_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 id="main_pick_modal_label" class="modal-title fs-5">주재료 선택하기</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">이전으로</button>
+          <button type="button" id="main_pick_modal_next" class="btn btn-primary">다음</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../scripts/choose.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 </body>

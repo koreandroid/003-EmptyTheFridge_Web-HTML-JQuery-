@@ -123,3 +123,14 @@ main .my-nav-btn{
 #secondary_ingredient{
   color: white;
 }
+
+/*
+  #main_ingredient_pick_modal */
+
+#main_ingredient_pick_modal .modal-body{
+  text-align: center;
+}
+
+#main_ingredient_pick_modal .modal-body label{
+  margin: 1.8% 0.4%;
+}
