@@ -139,11 +139,13 @@ main .my-nav-btn{
   #recipe_decide_with_main_modal */
 
 #recipe_decide_with_main_modal .modal-header{
+  background-color: #e0f4ff;
+
   padding-top: 1.3em;
 }
 
 #recipe_decide_with_main_modal .modal-header>h1 label{
-  font-weight: 800;
+  font-weight: bold;
 }
 
 #recipe_decide_with_main_modal .modal-body>h2 label{

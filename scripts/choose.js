@@ -147,7 +147,6 @@ async function setupRecipeDecideWithMainModal() {
 
         while (recipeIdToSecondaryList.size != recipeIds.length)
         {
-            console.log(recipeIdToSecondaryList.size, recipeIds.length);
             await new Promise(r => setTimeout(r, 30));     // recipeIdToSecondaryList에 대한 요청(ajaxRecipeIdToSecondaryList())이 완료되기를 기다리기
         }
 
