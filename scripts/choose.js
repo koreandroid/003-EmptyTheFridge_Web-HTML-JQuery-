@@ -154,7 +154,7 @@ async function setupRecipeDecideWithMainModal() {
 
         const h2SecondaryList = [...secondaries].sort();
 
-        let temp = '';
+        let temp = ' ';
         h2SecondaryList.forEach((irdntNm, idx) => temp += buildH2IngredientHtmlString(idx + 1, irdntNm));
         temp += (h2SecondaryList.length) ? '들 중에서 선택하실 수 있습니다.' : '필요하지 않습니다!';
 
