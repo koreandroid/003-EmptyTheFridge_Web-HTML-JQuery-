@@ -39,15 +39,15 @@ let recipeIdsForSecondaryIngredient;        // 부재료 먼저 선택하기
  */
 let recipeIds;
 
-function buildH1IngredientHtmlString(ingredientCount, irdntNm) {
-    return `<input type="radio" id="ingredient_${ingredientCount}" class="btn-check" name="ingredient" autocomplete="off" />` +
-    `<label class="btn btn-outline-primary" for="ingredient_${ingredientCount}">${irdntNm}</label>`;
-}
-
 function setupMainIngredientPickModal() {
     const mainIngredientPickModal = document.getElementById('main_ingredient_pick_modal');
 
-    // 다음 버튼을 클릭했을 때
+    function buildH1IngredientHtmlString(ingredientCount, irdntNm) {
+        return `<input type="radio" id="ingredient_${ingredientCount}" class="btn-check" name="ingredient" autocomplete="off" />` +
+        `<label class="btn btn-outline-primary" for="ingredient_${ingredientCount}">${irdntNm}</label>`;
+    }
+
+    // 페이지에서 다음 버튼을 클릭했을 때
     mainIngredientPickModal.addEventListener('show.bs.modal', () => {       // This event fires immediately when the show instance method is called.
         const modalBody = mainIngredientPickModal.querySelector('.modal-body');
 
@@ -63,11 +63,11 @@ function setupMainIngredientPickModal() {
         if (ingredientCount) {
             [...modalBody.getElementsByClassName('btn-check')].forEach(
                 element => element.addEventListener('change', event => {
-                    const ingredient = event.target.nextSibling.textContent;
+                    const main = event.target.nextSibling.textContent;
 
-                    recipeIds = recipeIdsForMainIngredient[ingredient];
+                    recipeIds = recipeIdsForMainIngredient[main];
 
-                    document.getElementById('main_pick_modal_next').setAttribute('data-bs-ingredient', ingredient);
+                    document.getElementById('main_pick_modal_next').setAttribute('data-bs-ingredient', main);
                     document.getElementById('main_pick_modal_next').disabled = false;
                 })
             );
@@ -102,9 +102,9 @@ let ajaxRecipeIdToSecondaryList;
 
 {
     const $ = jQuery;
-    const maxQuantityPerRequest = 1000;     // 데이터요청은 한번에 최대 1000건을 넘을 수 없습니다.
 
     ajaxRecipeIdToSecondaryList = function() {
+        const maxQuantityPerRequest = 1000;     // 데이터요청은 한번에 최대 1000건을 넘을 수 없습니다.
         for (const recipeId of recipeIds) {
             $.ajax({
                 url: 'https://cors-anywhere.herokuapp.com/' +
@@ -126,19 +126,21 @@ let ajaxRecipeIdToSecondaryList;
     }
 }
 
-function buildH2IngredientHtmlString(ingredientCount, irdntNm) {
-    return `<input type="checkbox" id="secondary_${ingredientCount}" class="btn-check" autocomplete="off" />` +
-    `<label class="btn btn-outline-dark" for="secondary_${ingredientCount}">${irdntNm}</label>`;
-}
-
 async function setupRecipeDecideWithMainModal() {
     const recipeDecideWithMainModal = document.getElementById('recipe_decide_with_main_modal');
 
-    // 주재료 선택 모달(#main_ingredient_pick_modal)에서 다음 버튼을 클릭했을 때
+    function buildH2IngredientHtmlString(ingredientCount, irdntNm) {
+        return `<input type="checkbox" id="secondary_${ingredientCount}" class="btn-check" autocomplete="off" />` +
+        `<label class="btn btn-outline-dark" for="secondary_${ingredientCount}">${irdntNm}</label>`;
+    }
+
+    // 주재료 선택 모달에서 다음 버튼을 클릭했을 때
     recipeDecideWithMainModal.addEventListener('show.bs.modal', event => {
+        const modalHeader = recipeDecideWithMainModal.querySelector('.modal-header');
+
         ajaxRecipeIdToSecondaryList();
 
-        recipeDecideWithMainModal.querySelector('#decide_with_main_modal_label>label').textContent = event.relatedTarget.getAttribute('data-bs-ingredient');
+        modalHeader.querySelector('.btn').textContent = event.relatedTarget.getAttribute('data-bs-ingredient');
     });
     recipeDecideWithMainModal.addEventListener('shown.bs.modal', async () => {
         const modalBody = recipeDecideWithMainModal.querySelector('.modal-body');
@@ -157,17 +159,18 @@ async function setupRecipeDecideWithMainModal() {
         const h2SecondaryList = [...secondaries].sort();
 
         let temp = ' ';
-        h2SecondaryList.forEach((irdntNm, idx) => temp += buildH2IngredientHtmlString(idx + 1, irdntNm));
+        h2SecondaryList.forEach((irdntNm, index) => temp += buildH2IngredientHtmlString(index + 1, irdntNm));
         temp += (h2SecondaryList.length) ? '들 중에서 선택하실 수 있습니다.' : '필요하지 않습니다!';
 
         modalBody.querySelector('h2').lastChild.innerHTML = temp;
     });
     recipeDecideWithMainModal.addEventListener('hidden.bs.modal', () => {
+        const modalHeader = recipeDecideWithMainModal.querySelector('.modal-header');
         const modalBody = recipeDecideWithMainModal.querySelector('.modal-body');
 
         recipeIdToSecondaryList.clear();
 
-        recipeDecideWithMainModal.querySelector('#decide_with_main_modal_label>label').textContent = '';
+        modalHeader.querySelector('.btn').textContent = '';
         modalBody.querySelector('h2').lastChild.textContent = '...';
     });
 }
