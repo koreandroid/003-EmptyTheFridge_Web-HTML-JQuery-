@@ -1,3 +1,6 @@
+const TY_CODE_MAIN = '3060001';             // 주재료와 부재료의 재료타입 코드는 각각 3060001과 3060002입니다.
+const TY_CODE_SECONDARY = '3060002';
+
 /**
  * < 페이지 >
  */
@@ -36,7 +39,7 @@ let recipeIdsForSecondaryIngredient;        // 부재료 먼저 선택하기
  */
 let recipeIds;
 
-function buildIngredientHtmlString(ingredientCount, irdntNm) {
+function buildH1IngredientHtmlString(ingredientCount, irdntNm) {
     return `<input type="radio" id="ingredient_${ingredientCount}" class="btn-check" name="ingredient" autocomplete="off" />` +
     `<label class="btn btn-outline-primary" for="ingredient_${ingredientCount}">${irdntNm}</label>`;
 }
@@ -52,13 +55,13 @@ function setupMainIngredientPickModal() {
         if ((input = document.getElementById('main_ingredient_input').value) && recipeIdsForMainIngredient) {
             for (const irdntNm in recipeIdsForMainIngredient) {
                 if (irdntNm.replace(/ /g, '').includes(input.replace(/ /g, ''))) {
-                    modalBody.innerHTML += buildIngredientHtmlString(++ingredientCount, irdntNm);
+                    modalBody.innerHTML += buildH1IngredientHtmlString(++ingredientCount, irdntNm);
                 }
             }
         }
 
         if (ingredientCount) {
-            [...modalBody.getElementsByTagName('input')].forEach(
+            [...modalBody.getElementsByClassName('btn-check')].forEach(
                 element => element.addEventListener('change', event => {
                     const ingredient = event.target.nextSibling.textContent;
 
@@ -93,13 +96,69 @@ function setupMainIngredientPickModal() {
 /**
  * < 레시피 결정 모달 >
  */
+const recipeIdToSecondaryList = new Map();
+let ajaxRecipeIdToSecondaryList;
 
-function setupRecipeDecideWithMainModal() {
+{
+    const $ = jQuery;
+    const maxQuantityPerRequest = 1000;     // 데이터요청은 한번에 최대 1000건을 넘을 수 없습니다.
+
+    ajaxRecipeIdToSecondaryList = function() {
+        for (const recipeId of recipeIds) {
+            $.ajax({
+                url: 'https://cors-anywhere.herokuapp.com/' +
+                'http://211.237.50.150:7080/openapi/acc145806a281b75ba781114b41220d54cbdbd82d97e155035977df143e75a4c/json/Grid_20150827000000000227_1/' +
+                '1/' + maxQuantityPerRequest + '?RECIPE_ID=' + recipeId,
+                dataType: 'json'
+            }).done(function(response) {
+                if (!(response.Grid_20150827000000000227_1?.totalCnt > 0)) return;
+
+                const temp = [];
+                response.Grid_20150827000000000227_1.row.filter(row => row.IRDNT_TY_CODE == TY_CODE_SECONDARY)
+                    .forEach(row => temp.push(row.IRDNT_NM));
+
+                recipeIdToSecondaryList.set(recipeId, temp);
+            }).fail(function(xhr, status, error) {
+                console.log('Error:', error);
+            });
+        }
+    }
+}
+
+function buildH2IngredientHtmlString(ingredientCount, irdntNm) {
+    return `<input type="checkbox" id="secondary_${ingredientCount}" class="btn-check" autocomplete="off" />` +
+    `<label class="btn btn-outline-dark" for="secondary_${ingredientCount}">${irdntNm}</label>`;
+}
+
+async function setupRecipeDecideWithMainModal() {
     const recipeDecideWithMainModal = document.getElementById('recipe_decide_with_main_modal');
 
     // 주재료 선택 모달(#main_ingredient_pick_modal)에서 다음 버튼을 클릭했을 때
     recipeDecideWithMainModal.addEventListener('show.bs.modal', event => {
+        ajaxRecipeIdToSecondaryList();
+
         recipeDecideWithMainModal.querySelector('#decide_with_main_modal_label>label').textContent = event.relatedTarget.getAttribute('data-bs-ingredient');
+    });
+    recipeDecideWithMainModal.addEventListener('shown.bs.modal', async () => {
+        const modalBody = recipeDecideWithMainModal.querySelector('.modal-body');
+
+        while (recipeIdToSecondaryList.size != recipeIds.length)
+        {
+            await new Promise(r => setTimeout(r, 300));     // recipeIdToSecondaryList에 대한 요청(ajaxRecipeIdToSecondaryList())이 완료되기를 기다리기
+        }
+
+        const secondaries = new Set();
+        for (const [_, secondaryList] of recipeIdToSecondaryList) {
+            secondaryList.forEach(secondary => secondaries.add(secondary));
+        }
+
+        const h2SecondaryList = [...secondaries].sort();
+
+        let temp = '';
+        h2SecondaryList.forEach((irdntNm, idx) => temp += buildH2IngredientHtmlString(idx + 1, irdntNm));
+        temp += (h2SecondaryList.length) ? '들 중에서 선택하실 수 있습니다.' : '필요하지 않습니다!';
+
+        modalBody.querySelector('h2').lastChild.innerHTML = temp;
     });
     recipeDecideWithMainModal.addEventListener('hidden.bs.modal', () => {
         recipeDecideWithMainModal.querySelector('#decide_with_main_modal_label>label').textContent = '';

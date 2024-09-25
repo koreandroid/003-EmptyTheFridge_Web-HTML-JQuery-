@@ -141,3 +141,7 @@ main .my-nav-btn{
 #recipe_decide_with_main_modal .modal-header{
   padding-top: 1.3em;
 }
+
+#recipe_decide_with_main_modal .modal-body>h2 label{
+  margin: 0.2em;
+}

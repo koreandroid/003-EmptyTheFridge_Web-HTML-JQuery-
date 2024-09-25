@@ -39,6 +39,7 @@
       </p>
       <div class="choose-control">
         <input type="text" id="secondary_ingredient_input" class="form-control form-control-lg word" placeholder="재료 이름" />
+        <!-- TODO: 부재료 선택 모달과 재료 검색 기능 추가후 연결하기 -->
         <button type="button" class="my-nav-btn btn btn-primary btn-lg">다음</button>
       </div>
     </section>
@@ -69,7 +70,9 @@
           <h1 id="decide_with_main_modal_label" class="modal-title fs-4">주재료로 <label class="btn btn-outline-primary btn-lg"></label>을(를) 고르셨습니다.</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body"></div>
+        <div class="modal-body">
+          <h2 class="fs-5">그리고 부재료는<span>...</span></h2>
+        </div>
         <div class="modal-footer">
           <a class="btn btn-secondary disabled" role="button" aria-disabled="true">홈 화면으로</a>
           <button type="button" class="btn btn-primary" data-bs-dismiss="modal">주재료/부재료 다시 선택하기</button>
