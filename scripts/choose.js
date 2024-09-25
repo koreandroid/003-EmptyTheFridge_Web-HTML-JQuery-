@@ -78,6 +78,7 @@ function setupMainIngredientPickModal() {
     });
     mainIngredientPickModal.addEventListener('hidden.bs.modal', () => {     // This event is fired when the modal has finished being hidden from the user (will wait for CSS transitions to complete).
         const modalBody = mainIngredientPickModal.querySelector('.modal-body');
+
         while (modalBody.firstChild)
         {
             modalBody.removeChild(modalBody.firstChild);
@@ -144,6 +145,7 @@ async function setupRecipeDecideWithMainModal() {
 
         while (recipeIdToSecondaryList.size != recipeIds.length)
         {
+            console.log(recipeIdToSecondaryList.size, recipeIds.length);
             await new Promise(r => setTimeout(r, 30));     // recipeIdToSecondaryList에 대한 요청(ajaxRecipeIdToSecondaryList())이 완료되기를 기다리기
         }
 
@@ -161,7 +163,12 @@ async function setupRecipeDecideWithMainModal() {
         modalBody.querySelector('h2').lastChild.innerHTML = temp;
     });
     recipeDecideWithMainModal.addEventListener('hidden.bs.modal', () => {
+        const modalBody = recipeDecideWithMainModal.querySelector('.modal-body');
+
+        recipeIdToSecondaryList.clear();
+
         recipeDecideWithMainModal.querySelector('#decide_with_main_modal_label>label').textContent = '';
+        modalBody.querySelector('h2').lastChild.textContent = '...';
     });
 }
 
