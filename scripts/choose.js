@@ -100,6 +100,8 @@ function setupMainIngredientPickModal() {
 const recipeIdToSecondaryList = new Map();
 let ajaxRecipeIdToSecondaryList;
 
+let getRecipeNm;
+
 {
     const $ = jQuery;
 
@@ -124,14 +126,58 @@ let ajaxRecipeIdToSecondaryList;
             });
         }
     }
+
+    getRecipeNm = function(recipeId) {
+        let recipeNm;
+        $.ajax({
+            async: false,
+            url: 'https://cors-anywhere.herokuapp.com/' +
+            'http://211.237.50.150:7080/openapi/acc145806a281b75ba781114b41220d54cbdbd82d97e155035977df143e75a4c/json/Grid_20150827000000000226_1/' +
+            '1/1?RECIPE_ID=' + recipeId,
+            dataType: 'json',
+            success: function(response) {
+                recipeNm = (response.Grid_20150827000000000226_1?.totalCnt > 0) ?
+                response.Grid_20150827000000000226_1.row[0].RECIPE_NM_KO :
+                null;
+            },
+            error: function(xhr, status, error) {
+                console.log('Error:', error);
+            }
+        });
+
+        return recipeNm;
+    }
 }
 
 async function setupRecipeDecideWithMainModal() {
     const recipeDecideWithMainModal = document.getElementById('recipe_decide_with_main_modal');
+    const checkedSecondaries = new Set();
 
     function buildH2IngredientHtmlString(ingredientCount, irdntNm) {
         return `<input type="checkbox" id="secondary_${ingredientCount}" class="btn-check" autocomplete="off" />` +
         `<label class="btn btn-outline-dark" for="secondary_${ingredientCount}">${irdntNm}</label>`;
+    }
+
+    function showRecipeBlocks() {
+        const wrapper = document.getElementById('recipe_blocks_wrap');
+
+        while (wrapper.firstChild)
+        {
+            wrapper.removeChild(wrapper.firstChild);
+        }
+
+        for (const [recipeId, secondaryList] of recipeIdToSecondaryList) {
+            if (!secondaryList.length || checkedSecondaries.intersection(new Set(secondaryList)).size) {
+                wrapper.appendChild(document.createElement('button')).setAttribute('type', 'button');
+                wrapper.lastChild.setAttribute('class', 'btn btn-dark');
+
+                if (recipeNm = getRecipeNm(recipeId)) {
+                    wrapper.lastChild.textContent = recipeNm;
+                } else {
+                    wrapper.removeChild(wrapper.lastChild);
+                }
+            }
+        }
     }
 
     // 주재료 선택 모달에서 다음 버튼을 클릭했을 때
@@ -161,16 +207,39 @@ async function setupRecipeDecideWithMainModal() {
         h2SecondaryList.forEach((irdntNm, index) => temp += buildH2IngredientHtmlString(index + 1, irdntNm));
         temp += (h2SecondaryList.length) ? '들 중에서 선택하실 수 있습니다.' : '필요하지 않습니다!';
 
+        // 선택 가능한 부재료 목록 또는 '필요하지 않습니다!' 문자열 나타내기
         modalBody.querySelector('h2').lastChild.innerHTML = temp;
+
+        showRecipeBlocks();
+
+        [...modalBody.getElementsByClassName('btn-check')].forEach(element => element.addEventListener(
+            'change',
+            event => {
+                const secondary = event.target.nextSibling.textContent;
+
+                if (event.target.checked) {
+                    checkedSecondaries.add(secondary);
+                } else {
+                    checkedSecondaries.delete(secondary);
+                }
+
+                showRecipeBlocks();
+            }));
     });
     recipeDecideWithMainModal.addEventListener('hidden.bs.modal', () => {
         const modalHeader = recipeDecideWithMainModal.querySelector('.modal-header');
         const modalBody = recipeDecideWithMainModal.querySelector('.modal-body');
 
         recipeIdToSecondaryList.clear();
+        checkedSecondaries.clear();
 
         modalHeader.querySelector('.btn').textContent = '';
         modalBody.querySelector('h2').lastChild.textContent = '...';
+        const wrapper = document.getElementById('recipe_blocks_wrap');
+        while (wrapper.firstChild)
+        {
+            wrapper.removeChild(wrapper.firstChild);
+        }
     });
 }
 

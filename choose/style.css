@@ -151,3 +151,7 @@ main .my-nav-btn{
 #recipe_decide_with_main_modal .modal-body>h2 label{
   margin: 0.2em;
 }
+
+#recipe_decide_with_main_modal #recipe_blocks_wrap{
+  margin-top: 2.8rem;
+}
