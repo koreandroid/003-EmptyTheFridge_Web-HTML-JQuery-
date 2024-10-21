@@ -1,6 +1,8 @@
 const TY_CODE_MAIN = '3060001';             // 주재료와 부재료의 재료타입 코드는 각각 3060001과 3060002입니다.
 const TY_CODE_SECONDARY = '3060002';
 
+let xhrList = [];
+
 /**
  * < 페이지 >
  */
@@ -12,12 +14,15 @@ let recipeIdsForSecondaryIngredient;        // 부재료 먼저 선택하기
 
     function ajaxRecipeIdsForMainIngredient() {
         $.ajax({
+            async: false,
             url: 'https://gist.githubusercontent.com/koreandroid/0bda18f1fa593e95d7b5a18cffe4e230/raw/4a0a4732f8d992434015b8bc1efdbec3eb5fd0c0/recipeIdsForMainIngredient.json',
-            dataType: 'json'
-        }).done(function(response) {
-            recipeIdsForMainIngredient = response;
-        }).fail(function(xhr, status, error) {
-            console.log('Error:', error);
+            dataType: 'json',
+            success: function(response) {
+                recipeIdsForMainIngredient = response;
+            },
+            error: function(xhr, status, error) {
+                console.log('Error:', error);
+            }
         });
     }
 
@@ -30,6 +35,15 @@ let recipeIdsForSecondaryIngredient;        // 부재료 먼저 선택하기
         }).one('focus', ajaxRecipeIdsForMainIngredient);
         $('#secondary_ingredient_input').on('focus', function() {
             $('#main_ingredient_input').val('');
+        });
+
+        // 재료 입력란에서 엔터 키를 눌렀을 때
+        document.body.querySelectorAll('main>section input[type="text"]').forEach(emt => {
+            emt.addEventListener('keypress', event => {
+                if (event.key === 'Enter') {
+                    event.target.nextElementSibling.click();
+                }
+            });
         });
     });
 }
@@ -108,7 +122,7 @@ let getRecipeNm;
     ajaxRecipeIdToSecondaryList = function() {
         const maxQuantityPerRequest = 1000;     // 데이터요청은 한번에 최대 1000건을 넘을 수 없습니다.
         for (const recipeId of recipeIds) {
-            $.ajax({
+            const xhr = $.ajax({
                 url: 'https://cors-anywhere.herokuapp.com/' +
                 'http://211.237.50.150:7080/openapi/acc145806a281b75ba781114b41220d54cbdbd82d97e155035977df143e75a4c/json/Grid_20150827000000000227_1/' +
                 '1/' + maxQuantityPerRequest + '?RECIPE_ID=' + recipeId,
@@ -124,6 +138,8 @@ let getRecipeNm;
             }).fail(function(xhr, status, error) {
                 console.log('Error:', error);
             });
+
+            xhrList.push(xhr);
         }
     }
 
@@ -226,12 +242,16 @@ async function setupRecipeDecideWithMainModal() {
                 showRecipeBlocks();
             }));
     });
-    recipeDecideWithMainModal.addEventListener('hidden.bs.modal', () => {
-        const modalHeader = recipeDecideWithMainModal.querySelector('.modal-header');
-        const modalBody = recipeDecideWithMainModal.querySelector('.modal-body');
+    recipeDecideWithMainModal.addEventListener('hide.bs.modal', () => {     // This event is fired immediately when the hide instance method has been called.
+        xhrList.forEach(xhr => xhr.abort());
+        xhrList = [];
 
         recipeIdToSecondaryList.clear();
         checkedSecondaries.clear();
+    });
+    recipeDecideWithMainModal.addEventListener('hidden.bs.modal', () => {
+        const modalHeader = recipeDecideWithMainModal.querySelector('.modal-header');
+        const modalBody = recipeDecideWithMainModal.querySelector('.modal-body');
 
         modalHeader.querySelector('.btn').textContent = '';
         modalBody.querySelector('h2').lastChild.textContent = '...';
@@ -241,6 +261,10 @@ async function setupRecipeDecideWithMainModal() {
             wrapper.removeChild(wrapper.firstChild);
         }
     });
+
+    // 헤더 부분의 주재료 이름 버튼을 클릭했을 때
+    recipeDecideWithMainModal.querySelector('.modal-header').
+        querySelector('.btn').addEventListener('click', () => document.getElementById('main_ingredient_input').nextElementSibling.click());
 }
 
 {
