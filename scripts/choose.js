@@ -18,10 +18,9 @@ let recipeIdsForSecondaryIngredient;        // TODO: 부재료 먼저 선택하�
             url: 'https://gist.githubusercontent.com/koreandroid/0bda18f1fa593e95d7b5a18cffe4e230/raw/4a0a4732f8d992434015b8bc1efdbec3eb5fd0c0/recipeIdsForMainIngredient.json',
             dataType: 'text',
             success: function(response) {
+                recipeIdsForMainIngredient = JSON.parse(response);
                 if (localStorage) {
                     localStorage.setItem('recipeIdsForMainIngredient', response);
-                } else {
-                    recipeIdsForMainIngredient = JSON.parse(response);
                 }
             },
             error: function(xhr, status, error) {
@@ -40,8 +39,6 @@ let recipeIdsForSecondaryIngredient;        // TODO: 부재료 먼저 선택하�
             } else {
                 ajaxRecipeIdsForMainIngredient();
             }
-
-            recipeIdsForMainIngredient ??= JSON.parse(localStorage.getItem('recipeIdsForMainIngredient'));
         });
         $('#secondary_ingredient_input').on('focus', function() {
             $('#main_ingredient_input').val('');
@@ -126,7 +123,7 @@ let getRecipeNm;
 {
     const $ = jQuery;
 
-    ajaxRecipeIdToSecondaryList = function() {
+    ajaxRecipeIdToSecondaryList = () => {
         const maxQuantityPerRequest = 1000;     // 데이터요청은 한번에 최대 1000건을 넘을 수 없습니다.
         for (const recipeId of recipeIds) {
             const xhr = $.ajax({
@@ -138,8 +135,8 @@ let getRecipeNm;
                 if (!(response.Grid_20150827000000000227_1?.totalCnt > 0)) return;
 
                 const temp = [];
-                response.Grid_20150827000000000227_1.row.filter(row => row.IRDNT_TY_CODE == TY_CODE_SECONDARY)
-                    .forEach(row => temp.push(row.IRDNT_NM));
+                response.Grid_20150827000000000227_1.row.filter(row => row.IRDNT_TY_CODE == TY_CODE_SECONDARY).
+                    forEach(row => temp.push(row.IRDNT_NM));
 
                 recipeIdToSecondaryList.set(recipeId, temp);
             }).fail(function(xhr, status, error) {
@@ -148,31 +145,39 @@ let getRecipeNm;
 
             xhrList.push(xhr);
         }
-    }
+    };
 
     getRecipeNm = function(recipeId) {
-        let recipeNm;
-        $.ajax({
-            async: false,
-            url: 'https://cors-anywhere.herokuapp.com/' +
-            'http://211.237.50.150:7080/openapi/acc145806a281b75ba781114b41220d54cbdbd82d97e155035977df143e75a4c/json/Grid_20150827000000000226_1/' +
-            '1/1?RECIPE_ID=' + recipeId,
-            dataType: 'json',
-            success: function(response) {
-                recipeNm = (response.Grid_20150827000000000226_1?.totalCnt > 0) ?
-                response.Grid_20150827000000000226_1.row[0].RECIPE_NM_KO :
-                null;
-            },
-            error: function(xhr, status, error) {
-                console.log('Error:', error);
-            }
-        });
+        let recipeNm = localStorage?.getItem(recipeId.toString());
+
+        if (!recipeNm) {
+            $.ajax({
+                async: false,
+                url: 'https://cors-anywhere.herokuapp.com/' +
+                'http://211.237.50.150:7080/openapi/acc145806a281b75ba781114b41220d54cbdbd82d97e155035977df143e75a4c/json/Grid_20150827000000000226_1/' +
+                '1/1?RECIPE_ID=' + recipeId,
+                dataType: 'json',
+                success: function(response) {
+                    if (!(response.Grid_20150827000000000226_1?.totalCnt > 0)) return;
+
+                    recipeNm = response.Grid_20150827000000000226_1.row[0].RECIPE_NM_KO;
+                    if (localStorage) {
+                        localStorage.setItem(recipeId.toString(), recipeNm);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log('Error:', error);
+
+                    recipeNm = null;
+                }
+            });
+        }
 
         return recipeNm;
-    }
+    };
 }
 
-async function setupRecipeDecideWithMainModal() {
+function setupRecipeDecideWithMainModal() {
     const recipeDecideWithMainModal = document.getElementById('recipe_decide_with_main_modal');
     const checkedSecondaries = new Set();
 
@@ -189,15 +194,16 @@ async function setupRecipeDecideWithMainModal() {
             wrapper.removeChild(wrapper.firstChild);
         }
 
-        for (const [recipeId, secondaryList] of recipeIdToSecondaryList) {
-            if (!secondaryList.length || checkedSecondaries.intersection(new Set(secondaryList)).size) {
-                wrapper.appendChild(document.createElement('button')).setAttribute('type', 'button');
-                wrapper.lastChild.setAttribute('class', 'btn btn-dark');
+        for (const recipeId of recipeIds) {
+            if ((secondaryList = recipeIdToSecondaryList.get(recipeId)) &&
+                (secondaryList.length == 0 || secondaryList.some(irdntNm => checkedSecondaries.has(irdntNm)))) {
+                const el = document.createElement('button');
+                el.setAttribute('type', 'button');
+                el.setAttribute('class', 'btn btn-dark');
 
                 if (recipeNm = getRecipeNm(recipeId)) {
-                    wrapper.lastChild.textContent = recipeNm;
-                } else {
-                    wrapper.removeChild(wrapper.lastChild);
+                    wrapper.appendChild(el).
+                        textContent = recipeNm;
                 }
             }
         }
@@ -207,9 +213,9 @@ async function setupRecipeDecideWithMainModal() {
     recipeDecideWithMainModal.addEventListener('show.bs.modal', event => {
         const modalHeader = recipeDecideWithMainModal.querySelector('.modal-header');
 
-        ajaxRecipeIdToSecondaryList();
-
         modalHeader.querySelector('.btn').textContent = event.relatedTarget.getAttribute('data-bs-ingredient');
+
+        ajaxRecipeIdToSecondaryList();
     });
     recipeDecideWithMainModal.addEventListener('shown.bs.modal', async () => {
         const modalBody = recipeDecideWithMainModal.querySelector('.modal-body');
@@ -224,30 +230,31 @@ async function setupRecipeDecideWithMainModal() {
             secondaryList.forEach(secondary => secondaries.add(secondary));
         }
 
-        const h2SecondaryList = [...secondaries].sort();
-
-        let temp = ' ';
-        h2SecondaryList.forEach((irdntNm, index) => temp += buildH2IngredientHtmlString(index + 1, irdntNm));
-        temp += (h2SecondaryList.length) ? '들 중에서 선택하실 수 있습니다.' : '필요하지 않습니다!';
+        const h2SecondaryList = Array.from(secondaries).sort();
 
         // 선택 가능한 부재료 목록 또는 '필요하지 않습니다!' 문자열 나타내기
-        modalBody.querySelector('h2').lastChild.innerHTML = temp;
+        let str = ' ';
+        for (const [index, irdntNm] of h2SecondaryList.entries()) {
+            str += buildH2IngredientHtmlString(index + 1, irdntNm);
+        }
+        str += (h2SecondaryList.length > 0) ? '들 중에서 선택하실 수 있습니다.' : '필요하지 않습니다!';
+        modalBody.querySelector('h2').lastChild.innerHTML = str;
 
-        showRecipeBlocks();
+        showRecipeBlocks();     // 부재료가 없어도 만들 수 있는 레시피들을 미리 보여주게 됩니다.
 
-        [...modalBody.getElementsByClassName('btn-check')].forEach(element => element.addEventListener(
-            'change',
-            event => {
-                const secondary = event.target.nextSibling.textContent;
+        [...modalBody.getElementsByClassName('btn-check')].forEach(
+            emt => emt.addEventListener('change', event => {
+                const irdntNm = event.target.nextSibling.textContent;
 
                 if (event.target.checked) {
-                    checkedSecondaries.add(secondary);
+                    checkedSecondaries.add(irdntNm);
                 } else {
-                    checkedSecondaries.delete(secondary);
+                    checkedSecondaries.delete(irdntNm);
                 }
 
                 showRecipeBlocks();
-            }));
+            })
+        );
     });
     recipeDecideWithMainModal.addEventListener('hide.bs.modal', () => {         // This event is fired immediately when the hide instance method has been called.
         xhrList.forEach(xhr => xhr.abort());
