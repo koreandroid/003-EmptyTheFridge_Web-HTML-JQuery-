@@ -12,7 +12,7 @@ let recipeIdsForSecondaryIngredient;        // TODO: 부재료 먼저 선택하�
 {
     const $ = jQuery;
 
-    function ajaxRecipeIdsForMainIngredient() {
+    function getRecipeIdsForMainIngredient() {
         $.ajax({
             async: false,
             url: 'https://gist.githubusercontent.com/koreandroid/0bda18f1fa593e95d7b5a18cffe4e230/raw/4a0a4732f8d992434015b8bc1efdbec3eb5fd0c0/recipeIdsForMainIngredient.json',
@@ -37,7 +37,7 @@ let recipeIdsForSecondaryIngredient;        // TODO: 부재료 먼저 선택하�
             if (data = localStorage?.getItem('recipeIdsForMainIngredient')) {
                 recipeIdsForMainIngredient = JSON.parse(data);
             } else {
-                ajaxRecipeIdsForMainIngredient();
+                getRecipeIdsForMainIngredient();
             }
         });
         $('#secondary_ingredient_input').on('focus', function() {

@@ -1,0 +1,74 @@
+body{
+  background-color: #e0f4ff;
+}
+
+body{
+  width: max(100%, 1214px);
+}
+
+/*
+  header */
+
+header{
+  padding: 1.2vmin;
+
+  height: 12.5vh;
+
+  text-align: center;
+}
+
+/*
+  main */
+
+main{
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+#board{
+  border-collapse: collapse;
+  border-spacing: 0;
+
+  flex: 3;
+  aspect-ratio: 20 / 15;
+}
+
+#board td.on{
+  background-color: white;
+
+  border-color: #ffeed9;
+}
+
+#board td{
+  border: 5px dashed transparent;
+  padding: 0;
+
+  height: 0;
+}
+
+#board td>input{
+  background-color: transparent;
+
+  border: none;
+
+  width: 100%;
+  height: 100%;
+
+  pointer-events: none;
+}
+
+#board td>input:hover{
+  background-color: #ffeed9;
+}
+
+#board td>input:focus{
+  background-color: transparent;
+
+  outline: none;
+}
+
+#clue{
+  background-color: #87c4ff;
+
+  flex: 2;
+}
