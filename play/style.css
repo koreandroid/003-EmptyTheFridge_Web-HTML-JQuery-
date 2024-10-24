@@ -79,8 +79,50 @@ main{
   outline: none;
 }
 
-#clue{
-  background-color: #87c4ff;
+#hints{
+  display: flex;
+  flex-flow: column nowrap;
+}
 
+#hints{
   flex: 2;
+  aspect-ratio: 8 / 9;
+}
+
+#hints>div:nth-child(1){
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+
+  flex: 1;
+}
+
+#hints_title{
+  color: #39a7ff;
+  font-weight: 800;
+
+  text-align: center;
+}
+
+#hints>div:nth-child(2){   /* #hint_list_container */
+  flex: 6;
+  overflow-y: auto;
+}
+
+#hint_list>button{
+  font-size: large;
+  font-weight: bold;
+}
+
+.hint_wrap{
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.hint_checkbox_wrap{
+  margin: 0.54em;
+}
+
+#hint_list input[type="checkbox"]{
+  pointer-events: none;
 }

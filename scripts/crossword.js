@@ -3,7 +3,7 @@ let stageCount = 0;
 
 const inputList = [];
 
-function setBoard(wordList) {
+function setupBoard(wordList) {
     const tdElements = board.getElementsByTagName('td');
     for (tdEl of tdElements) {
         const textEl = document.createElement('input');
@@ -24,6 +24,39 @@ function setBoard(wordList) {
 
         inputList[index].style.setProperty('pointer-events', 'auto');
     }
+}
+
+function buildHintItemHtmlString(number, hint) {
+    return `<button type="button" id="hint_item_${number}` +
+    '" class="list-group-item list-group-item-action"><div class="hint_wrap"><div class="hint_checkbox_wrap"><input type="checkbox" class="form-check-input me-1" /></div><div>' +
+    `<span class="form-check-label">${hint}</span></div></div></button>`;
+}
+
+function initHints(wordList) {
+    const hintList = document.getElementById('hint_list');
+
+    for (const [idx, word] of wordList.entries()) {
+        hintList.innerHTML += buildHintItemHtmlString(idx + 1, word.hint);
+    }
+}
+
+function setupHints(wordList) {
+    const hintList = document.getElementById('hint_list');
+
+    [...hintList.getElementsByTagName('button')].forEach(el => {
+        const index = Number(el.id.replace('hint_item_', '')) - 1;
+
+        el.addEventListener('mouseenter', () => {
+            wordList[index].gridList.forEach(grid => {
+                inputList[20 * (grid[0] - 1) + grid[1] - 1].style.setProperty('background-color', '#ffeed9');
+            });
+        });
+        el.addEventListener('mouseleave', () => {
+            wordList[index].gridList.forEach(grid => {
+                inputList[20 * (grid[0] - 1) + grid[1] - 1].style.setProperty('background-color', 'transparent');
+            });
+        });
+    });
 }
 
 function getPuzzleList() {
@@ -49,8 +82,12 @@ function setupNextPuzzle() {
     if (puzzleList.length == stageCount) return false;
 
     const puzzle = puzzleList[stageCount];
+    const wordList = puzzle.wordList;
 
-    setBoard(puzzle.wordList);
+    setupBoard(wordList);
+
+    initHints(wordList);
+    setupHints(wordList);
 
     stageCount++;
 }
