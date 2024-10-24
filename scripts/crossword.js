@@ -1,16 +1,48 @@
 let board;
 let stageCount = 0;
 
-const inputList = [];
+let inputList = [];
+let checkboxList = [];
 
-function setupBoard(wordList) {
-    const tdElements = board.getElementsByTagName('td');
-    for (tdEl of tdElements) {
+function verifyPuzzle(wordList) {
+    let result = true;
+
+    for (const [idx, word] of wordList.entries()) {
+        let text = '';
+        for (const grid of word.gridList) {
+            text += inputList[20 * (grid[0] - 1) + grid[1] - 1].value[0] ?? '';
+        }
+
+        checkboxList[idx].checked = text == word.word;
+        result &&= checkboxList[idx].checked;
+    }
+
+    return result;
+}
+
+let clearBoard;
+let clearHints;
+
+function runPuzzle(wordList) {
+    if (verifyPuzzle(wordList)) {
+        clearBoard();
+        clearHints();
+
+        setupNextPuzzle();
+    }
+}
+
+function initBoard() {
+    for (const tdEl of board.getElementsByTagName('td')) {
         const textEl = document.createElement('input');
         textEl.setAttribute('type', 'text');
         textEl.setAttribute('maxlength', '1');
         inputList.push(tdEl.appendChild(textEl));
     }
+}
+
+function setupBoard(wordList) {
+    const tdElements = board.getElementsByTagName('td');
 
     const usingGrids = new Set();
     for (const word of wordList) {
@@ -24,7 +56,23 @@ function setupBoard(wordList) {
 
         inputList[index].style.setProperty('pointer-events', 'auto');
     }
+
+    inputList.forEach(input => {
+        input.addEventListener('input', () => {
+            runPuzzle(wordList);
+        });
+    });
 }
+
+clearBoard = () => {
+    inputList = [];
+    for (const tdEl of board.getElementsByTagName('td')) {
+        while (tdEl.firstChild)
+        {
+            tdEl.removeChild(tdEl.firstChild);
+        }
+    }
+};
 
 function buildHintItemHtmlString(number, hint) {
     return `<button type="button" id="hint_item_${number}` +
@@ -43,7 +91,8 @@ function initHints(wordList) {
 function setupHints(wordList) {
     const hintList = document.getElementById('hint_list');
 
-    [...hintList.getElementsByTagName('button')].forEach(el => {
+    const buttonElements = hintList.getElementsByTagName('button');
+    [...buttonElements].forEach(el => {
         const index = Number(el.id.replace('hint_item_', '')) - 1;
 
         el.addEventListener('mouseenter', () => {
@@ -57,7 +106,16 @@ function setupHints(wordList) {
             });
         });
     });
+
+    for (const buttonEl of buttonElements) {
+        checkboxList.push(buttonEl.querySelector('.form-check-input'));
+    }
 }
+
+clearHints = () => {
+    checkboxList = [];
+    document.getElementById('hint_list').innerHTML = '';
+};
 
 function getPuzzleList() {
     let result = null;
@@ -84,12 +142,15 @@ function setupNextPuzzle() {
     const puzzle = puzzleList[stageCount];
     const wordList = puzzle.wordList;
 
+    initBoard();
     setupBoard(wordList);
 
     initHints(wordList);
     setupHints(wordList);
 
     stageCount++;
+
+    return true;
 }
 
 {
@@ -98,8 +159,8 @@ function setupNextPuzzle() {
     $(document).ready(function() {
         board = document.getElementById('board');
 
-        if (puzzleList?.length) {
+        if (puzzleList?.length > 0) {
             setupNextPuzzle();
-        }
+        } else {}       // TODO: 홈 화면으로 되돌아갈 수 있도록 버튼 토글하기
     });
 }
