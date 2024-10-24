@@ -35,18 +35,25 @@ main{
 
 #board td.on{
   background-color: white;
+}
 
+#board td.bd-0{
   border-color: #ffeed9;
 }
 
+#board td.bd-1{
+  border-color: darkcyan;
+}
+
 #board td{
-  border: 5px dashed transparent;
+  border: 5px dashed;
+  border-color: transparent;
   padding: 0;
 
   height: 0;
 }
 
-#board td>input{
+#board td>input[type="text"]{
   background-color: transparent;
 
   border: none;
@@ -54,14 +61,19 @@ main{
   width: 100%;
   height: 100%;
 
+  font-size: 16.9pt;
+  font-weight: 800;
+
+  text-align: center;
+
   pointer-events: none;
 }
 
-#board td>input:hover{
+#board td>input[type="text"]:hover{
   background-color: #ffeed9;
 }
 
-#board td>input:focus{
+#board td>input[type="text"]:focus{
   background-color: transparent;
 
   outline: none;
