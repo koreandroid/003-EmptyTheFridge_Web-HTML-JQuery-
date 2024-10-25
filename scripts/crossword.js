@@ -84,6 +84,8 @@ function clearHints() {
  * 게임 시작 및 작동
  */
 
+let puzzleList;
+
 function verifyPuzzle(wordList) {
     let result = true;
 
@@ -99,25 +101,6 @@ function verifyPuzzle(wordList) {
 
     return result;
 }
-
-function getPuzzleList() {
-    let result = null;
-    jQuery.ajax({
-        async: false,
-        url: 'https://gist.githubusercontent.com/koreandroid/5766402dc38b48c27d135cf3959b369d/raw/9218f90376035bd5b46df36507ae9dc40f3270a3/crosswordPuzzleList.json',
-        dataType: 'json',
-        success: function(response) {
-            result = response.puzzleList;
-        },
-        error: function(xhr, status, error) {
-            console.log('Error:', error);
-        }
-    });
-
-    return result;
-}
-
-const puzzleList = getPuzzleList();
 
 function setupNextPuzzle() {
     if (++stageCount > puzzleList.length) return false;
@@ -156,6 +139,23 @@ function activatePuzzle(wordList) {
     });
 }
 
+function getPuzzleList() {
+    let result = null;
+    jQuery.ajax({
+        async: false,
+        url: 'https://gist.githubusercontent.com/koreandroid/5766402dc38b48c27d135cf3959b369d/raw/9218f90376035bd5b46df36507ae9dc40f3270a3/crosswordPuzzleList.json',
+        dataType: 'json',
+        success: function(response) {
+            result = response.puzzleList;
+        },
+        error: function(xhr, status, error) {
+            console.log('Error:', error);
+        }
+    });
+
+    return result;
+}
+
 function startGame() {
     setupNextPuzzle();
     activatePuzzle(puzzleList[stageCount - 1].wordList);
@@ -165,9 +165,9 @@ function startGame() {
     const $ = jQuery;
 
     $(document).ready(function() {
-        board = document.getElementById('board');
+        if ((puzzleList = getPuzzleList())?.length > 0) {
+            board = document.getElementById('board');
 
-        if (puzzleList?.length > 0) {
             startGame();
         } else {}       // TODO: 홈 화면으로 되돌아갈 수 있도록 버튼 토글하기
     });
