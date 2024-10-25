@@ -1,3 +1,4 @@
+let icon;
 let board;
 
 let stageCount = 0;
@@ -111,7 +112,11 @@ function verifyPuzzle(wordList) {
 }
 
 function setupNextPuzzle() {
-    if (++stageCount > puzzleList.length) return null;
+    icon.src = '../images/ic_fridge_empty.png';
+    icon.setAttribute('alt', 'This is an empty fridge icon.');
+    icon.style.removeProperty('animation');
+
+    stageCount++;
 
     const puzzle = puzzleList[stageCount - 1];
 
@@ -135,7 +140,12 @@ function activatePuzzle(wordList) {
     inputList.forEach(input => {
         input.addEventListener('input', event => {
             event.stopPropagation();
+
             if (!isPuzzleCompleted[stageCount - 1] && verifyPuzzle(wordList)) {
+                icon.src = '../images/ic_fridge_full.png';
+                icon.setAttribute('alt', 'This is a full fridge icon.');
+                icon.style.setProperty('animation', 'shake 0.5s');
+
                 if (stageCount == puzzleList.length) {
                     new bootstrap.Modal('#completion_modal').show();
                 } else {
@@ -178,6 +188,7 @@ function startGame() {
 
     $(document).ready(function() {
         if ((puzzleList = getPuzzleList())?.length > 0) {
+            icon = document.getElementById('ic_fridge');
             board = document.getElementById('board');
 
             startGame();
