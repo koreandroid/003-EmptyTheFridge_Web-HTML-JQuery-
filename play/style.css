@@ -61,7 +61,6 @@ main{
   border-spacing: 0;
 
   flex: 3;
-  aspect-ratio: 20 / 15;
 }
 
 #board td.on{

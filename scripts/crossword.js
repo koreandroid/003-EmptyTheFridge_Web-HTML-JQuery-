@@ -192,6 +192,6 @@ function startGame() {
             board = document.getElementById('board');
 
             startGame();
-        } else {}       // TODO: 홈 화면으로 되돌아갈 수 있도록 버튼 토글하기
+        } else {}       // TODO: 홈 화면으로 되돌아갈 수 있도록 아이콘 토글하기
     });
 }
