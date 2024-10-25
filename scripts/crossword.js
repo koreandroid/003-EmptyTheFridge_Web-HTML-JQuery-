@@ -1,4 +1,5 @@
 let board;
+
 let stageCount = 0;
 
 let inputList = [];         // board 테이블의 입력란 리스트입니다.
@@ -87,8 +88,9 @@ function clearHints() {
 /**
  * 게임 시작 및 작동
  */
-
 let puzzleList;
+
+let isPuzzleCompleted;
 
 function verifyPuzzle(wordList) {
     let result = true;
@@ -102,6 +104,8 @@ function verifyPuzzle(wordList) {
         checkboxList[idx].checked = text == word.word;
         result &&= checkboxList[idx].checked;
     }
+
+    isPuzzleCompleted[stageCount - 1] ||= result;
 
     return result;
 }
@@ -131,14 +135,14 @@ function activatePuzzle(wordList) {
     inputList.forEach(input => {
         input.addEventListener('input', event => {
             event.stopPropagation();
-            if (verifyPuzzle(wordList)) {
-                clearBoard();
-                clearHints();
-
-                if (puzzle = setupNextPuzzle()) {
-                    activatePuzzle(puzzle.wordList);
+            if (!isPuzzleCompleted[stageCount - 1] && verifyPuzzle(wordList)) {
+                if (stageCount == puzzleList.length) {
+                    new bootstrap.Modal('#completion_modal').show();
                 } else {
-                    history.back();
+                    clearBoard();
+                    clearHints();
+
+                    activatePuzzle(setupNextPuzzle().wordList);
                 }
             }
         });
@@ -163,6 +167,8 @@ function getPuzzleList() {
 }
 
 function startGame() {
+    isPuzzleCompleted = new Array(puzzleList.length).fill(false);
+
     setupNextPuzzle();
     activatePuzzle(puzzleList[stageCount - 1].wordList);
 }
