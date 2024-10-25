@@ -12,6 +12,7 @@ function initBoard() {
     for (const tdEl of board.getElementsByTagName('td')) {
         const textEl = document.createElement('input');
         textEl.setAttribute('type', 'text');
+        textEl.setAttribute('tabindex', '-1');
         textEl.setAttribute('maxlength', '1');
 
         inputList.push(tdEl.appendChild(textEl));
@@ -30,6 +31,7 @@ function setupBoard(wordList) {
     for (const grid of usingGrids) {
         const index = 20 * (grid[0] - 1) + grid[1] - 1;
         tdElements.item(index).setAttribute('class', `on bd-${(stageCount - 1) % 2}`);
+        inputList[index].removeAttribute('tabindex');
         inputList[index].style.setProperty('pointer-events', 'auto');
     }
 }
@@ -41,6 +43,8 @@ function clearBoard() {
         {
             tdEl.removeChild(tdEl.firstChild);
         }
+
+        tdEl.removeAttribute('class');
     }
 }
 
@@ -103,7 +107,7 @@ function verifyPuzzle(wordList) {
 }
 
 function setupNextPuzzle() {
-    if (++stageCount > puzzleList.length) return false;
+    if (++stageCount > puzzleList.length) return null;
 
     const puzzle = puzzleList[stageCount - 1];
 
@@ -120,7 +124,7 @@ function setupNextPuzzle() {
 
     setupHints(wordList);
 
-    return true;
+    return puzzle;
 }
 
 function activatePuzzle(wordList) {
@@ -131,8 +135,10 @@ function activatePuzzle(wordList) {
                 clearBoard();
                 clearHints();
 
-                if (setupNextPuzzle()) {
-                    activatePuzzle(wordList);
+                if (puzzle = setupNextPuzzle()) {
+                    activatePuzzle(puzzle.wordList);
+                } else {
+                    history.back();
                 }
             }
         });
