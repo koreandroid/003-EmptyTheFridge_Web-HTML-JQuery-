@@ -3,17 +3,34 @@ body{
 }
 
 body{
-  width: max(100%, 1214px);
+  min-width: 1214px;
 }
 
 /*
   header */
 
 header{
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+header{
   padding: 1.2vmin;
 
   height: 12.5vh;
+}
 
+header>div{
+  flex: 1;
+}
+
+header>div:first-child{
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+header .icon-container{
   text-align: center;
 }
 
