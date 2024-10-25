@@ -153,7 +153,7 @@ function getPuzzleList() {
     let result = null;
     jQuery.ajax({
         async: false,
-        url: 'https://gist.githubusercontent.com/koreandroid/5766402dc38b48c27d135cf3959b369d/raw/9218f90376035bd5b46df36507ae9dc40f3270a3/crosswordPuzzleList.json',
+        url: 'https://gist.githubusercontent.com/koreandroid/5766402dc38b48c27d135cf3959b369d/raw/cfa01748c917b66bcdd8db576e05844696a9feb7/crosswordPuzzleList.json',
         dataType: 'json',
         success: function(response) {
             result = response.puzzleList;
